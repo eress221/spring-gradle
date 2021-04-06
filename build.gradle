@@ -1,0 +1,77 @@
+plugins {
+    id 'java'
+    id 'war'
+}
+
+group 'com.eress'
+version '1.0-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+task explodedWar(type: Copy) {
+    into "${buildDir}/libs/exploded/${war.archiveFileName.get()}"
+    with war
+}
+
+war {
+    war.dependsOn explodedWar
+}
+
+/* unzip */
+//war.doLast {
+//    ant.unzip(src: "${buildDir}/libs/${war.archiveFileName.get()}", dest: "${buildDir}/libs/exploded/${war.archiveFileName.get()}")
+//}
+
+def version = [
+        spring: '5.2.3.RELEASE',
+]
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    /* spring - https://spring.io/ */
+    compile "org.springframework:spring-webmvc:${version.spring}"
+    compile "org.springframework:spring-jdbc:${version.spring}"
+
+    /* logback */
+    compile "org.slf4j:slf4j-api:1.7.30"
+    compile "ch.qos.logback:logback-classic:1.2.3"
+    compile "org.logback-extensions:logback-ext-spring:0.1.5"
+    compile "org.codehaus.janino:janino:3.1.0"
+
+    /* mariadb + mybatis */
+    compile "org.mariadb.jdbc:mariadb-java-client:2.5.2"
+    compile "org.mybatis:mybatis:3.5.3"
+    compile "org.mybatis:mybatis-spring:2.0.3"
+
+    /* jsp + jstl */
+    providedCompile "javax.servlet:javax.servlet-api:4.0.1"
+    compile "javax.servlet:jstl:1.2"
+
+    /* lombok - https://mvnrepository.com/artifact/org.projectlombok/lombok */
+    compileOnly "org.projectlombok:lombok:1.18.10"
+    annotationProcessor "org.projectlombok:lombok:1.18.10"
+
+    /* tiles - https://tiles.apache.org */
+    compile "org.apache.tiles:tiles-extras:3.0.8"
+    compile "org.apache.tiles:tiles-servlet:3.0.8"
+    compile "org.apache.tiles:tiles-jsp:3.0.8"
+
+    /* gson */
+    compile "com.google.code.gson:gson:2.8.6"
+
+    /* okhttp - https://square.github.io/okhttp/ */
+    compile "com.squareup.okhttp3:okhttp:4.3.1"
+
+    /* commons-lang3 - https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 */
+    compile "org.apache.commons:commons-lang3:3.9"
+
+    /* sha256 */
+    compile "commons-codec:commons-codec:1.13"
+
+    /* connection pool */
+    compile "org.apache.commons:commons-dbcp2:2.7.0"
+
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
